@@ -1,0 +1,181 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX 31
+
+struct lista{
+
+    char info;
+    struct lista* prox;
+};
+
+typedef struct lista Lista;
+
+Lista* inicializa()
+{
+    printf("Sua lista foi criada\n");
+    return NULL;
+}
+
+Lista* insere(Lista*l, char c)
+{
+
+    Lista* novo = (Lista*)malloc(sizeof(Lista));
+
+    novo->info = c;
+    novo->prox = l;
+
+    return novo;
+}
+
+int vazia(Lista* l)
+{
+    if(l == NULL)
+        return 1;
+    else
+        return 0;
+}
+
+void busca(Lista* l)
+{
+    Lista* p;
+    char valor;
+    int achou=0;
+
+    printf("Insira um caractere para busca: ");
+    scanf(" %c", &valor);
+
+    for(p=l; p!=NULL; p=p->prox)
+    {
+        if(p->info == valor)
+        {
+            achou = 1;
+            break;
+        }
+    }
+    if(achou)
+        printf("O caractere '%c' exista na lista\n", valor);
+    else
+        printf("O caractere '%c' NAO existe na lista\n", valor);
+}
+
+void imprime(Lista* l)
+{
+    Lista* p;
+    for(p=l; p!=NULL; p=p->prox)
+        printf("%c ", p->info);
+}
+
+Lista* retira(Lista* l)
+{
+    Lista* ant = NULL;
+    Lista* p = l;
+    char valor;
+
+    printf("Insira um caractere para retirar da lista: ");
+    scanf(" %c", &valor);
+
+    while(p != NULL && p-> info != valor)
+    {
+        ant = p;
+        p = p->prox;
+    }
+
+    if(p == NULL)
+        return l;
+
+    if(ant == NULL)
+        l = p->prox;
+    else
+        ant->prox = p->prox;
+
+    free(p);
+
+    printf("\nO caractere '%c' foi retirado da lista!\n", valor);
+    return l;
+}
+
+void libera(Lista* l)
+{
+    Lista* p = l;
+
+    while(p != NULL)
+    {
+        Lista* t = p->prox;
+        free(p);
+        p=t;
+    }
+}
+
+
+void menu()
+{
+
+    printf("\n********************************************\n");
+    printf("Escolha uma opcao:\n");
+    printf("1 - Criar uma nova lista\n");
+    printf("2 - Inserir um texto em uma lista\n");
+    printf("3 - Buscar um elemento em uma lista\n");
+    printf("4 - Imprimir uma lista\n");
+    printf("5 - Retirar um elemento de uma lista\n");
+    printf("6 - Liberar uma lista\n");
+    printf("7 - Finalizar\n");
+    printf("********************************************\n");
+
+}
+
+int main()
+{
+    int opcao = 0;
+    Lista* l;
+
+    while(opcao != 7)
+    {
+        menu();
+        scanf("%d", &opcao);
+
+        switch(opcao)
+        {
+            case 1: printf("Opcao %d selecionada\n", opcao);
+                    l = inicializa();
+                    break;
+
+            case 2: printf("Opcao %d selecionada\n", opcao);
+                    char string[MAX];
+                    int i;
+
+                    printf("Digite uma string de ate 30 caracteres: ");
+                    scanf("%s", string); getchar();
+
+                    for (i=0; i<strlen(string); i++)
+                    {
+                        l = insere(l, string[i]);
+                    }
+                    break;
+
+            case 3: printf("Opcao %d selecionada\n", opcao);
+                    busca(l);
+                    break;
+
+            case 4: printf("Opcao %d selecionada\n", opcao);
+                    imprime(l);
+                    break;
+
+            case 5: printf("Opcao %d selecionada\n", opcao);
+                    l = retira(l);
+                    break;
+
+            case 6: printf("Opcao %d selecionada\n", opcao);
+                    libera(l);
+                    break;
+
+            case 7: printf("O programa foi finalizado\n");
+                    break;
+
+            default: printf("Essa nao e uma opcao valida. Por favor, escolha novamente\n");
+                     break;
+        }
+    }
+
+    return 0;
+}
